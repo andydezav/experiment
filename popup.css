@@ -1,0 +1,69 @@
+/* General reset and layout */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #89CFF0;
+  font-family: Baskerville, serif;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main container */
+#app {
+  background: white;
+  padding: 30px 20px;
+  border-radius: 20px;
+  text-align: center;
+  width: 90%;
+  max-width: 320px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Sections */
+.content-container {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.content-container.show {
+  display: block;
+  opacity: 1;
+}
+
+/* Typography */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+p {
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  border: none;
+  background: #4f4fff;
+  color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 8px;
+}
+
+button:hover {
+  background: #3a3aff;
+}

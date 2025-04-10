@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #89CFF0;
+  font-family: Baskerville, serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 300px;
+}
+
+#app {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+h1, h2, p {
+  margin: 10px 0;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background: #4f4fff;
+  color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #3a3aff;
+}

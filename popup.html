@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEA Assistant</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div id="app">
+    <h1>🌊 Welcome to SEA!</h1>
+    <p>Let’s help you set sail to your final destination.</p>
+
+    <div id="choices" class="content-container show">
+      <button class="choice-button" onclick="handleTypeSelection('movie')">A Movie</button>
+      <button class="choice-button" onclick="handleTypeSelection('series')">A TV Series</button>
+    </div>
+
+    <div id="movieQuestions" class="content-container">
+      <h3>What kind of movie are you looking for?</h3>
+      <button onclick="handleDurationSelection('movie', 'short')">Short</button>
+      <button onclick="handleDurationSelection('movie', 'medium')">Medium</button>
+      <button onclick="handleDurationSelection('movie', 'long')">Long</button>
+    </div>
+
+    <div id="seriesQuestions" class="content-container">
+      <h3>What kind of series are you looking for?</h3>
+      <button onclick="handleDurationSelection('series', 'short')">Short</button>
+      <button onclick="handleDurationSelection('series', 'medium')">Medium</button>
+      <button onclick="handleDurationSelection('series', 'long')">Long</button>
+    </div>
+
+    <div id="movieGenre" class="content-container">
+      <h3>What genre are you feeling for a movie?</h3>
+      <button onclick="chooseGenre('movie', 'Drama')">Drama</button>
+      <button onclick="chooseGenre('movie', 'Comedy')">Comedy</button>
+      <button onclick="chooseGenre('movie', 'Action')">Action</button>
+      <button onclick="chooseGenre('movie', 'Horror')">Horror</button>
+    </div>
+
+    <div id="seriesGenre" class="content-container">
+      <h3>What genre are you feeling for a series?</h3>
+      <button onclick="chooseGenre('series', 'Drama')">Drama</button>
+      <button onclick="chooseGenre('series', 'Comedy')">Comedy</button>
+      <button onclick="chooseGenre('series', 'Action')">Action</button>
+      <button onclick="chooseGenre('series', 'Horror')">Horror</button>
+    </div>
+
+    <div id="streamingService" class="content-container">
+      <h3>Where would you like to watch?</h3>
+      <button onclick="chooseStreamingService('Netflix')">Netflix</button>
+      <button onclick="chooseStreamingService('Hulu')">Hulu</button>
+      <button onclick="chooseStreamingService('Disney+')">Disney+</button>
+    </div>
+
+    <div id="loading" class="content-container">
+      <h3>Generating your recommendation...</h3>
+    </div>
+
+    <div id="movieResult" class="content-container">
+      <h3>Your Movie Recommendation 🎬</h3>
+      <p id="movieResultText"></p>
+    </div>
+
+    <div id="seriesResult" class="content-container">
+      <h3>Your Series Recommendation 📺</h3>
+      <p id="seriesResultText"></p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

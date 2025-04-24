@@ -2,72 +2,405 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SEA Assistant</title>
-  <link rel="stylesheet" href="popup.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S.E.A. — Streaming Electronic Assistant</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom, #c2f0f7, #90dff0);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .frame {
+      display: none;
+      background: #58c4dc;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .frame.active {
+      display: block;
+    }
+
+    #loading {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to bottom, #7dd7f0, #58c4dc);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      animation: waveAnim 2s infinite ease-in-out;
+    }
+
+    #loading.show {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes waveAnim {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .options button, .start-button, .restart-button, .details-button {
+      margin: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      background: #a0e6f9;
+      color: #004e66;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .options button:hover, .start-button:hover, .restart-button:hover, .details-button:hover {
+      background: #7fd6ec;
+    }
+
+    .result {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    #details-review {
+      max-width: 100%; /* Prevent horizontal overflow */
+      max-height: 300px; /* Set a maximum height */
+      overflow-y: auto; /* Add vertical scrolling if the content exceeds the height */
+      padding: 1rem;
+      background: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <h1>🌊 Welcome to SEA!</h1>
-    <p>Let’s help you set sail to your final destination.</p>
 
-    <div id="choices" class="content-container show">
-      <button class="choice-button" onclick="handleTypeSelection('movie')">A Movie</button>
-      <button class="choice-button" onclick="handleTypeSelection('series')">A TV Series</button>
-    </div>
+  <audio autoplay loop>
+    <source src="https://cdn.pixabay.com/audio/2021/08/09/audio_f16c68c243.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 
-    <div id="movieQuestions" class="content-container">
-      <h3>What kind of movie are you looking for?</h3>
-      <button onclick="handleDurationSelection('movie', 'short')">Short</button>
-      <button onclick="handleDurationSelection('movie', 'medium')">Medium</button>
-      <button onclick="handleDurationSelection('movie', 'long')">Long</button>
-    </div>
+  <div id="loading">🌊 Riding the waves...</div>
 
-    <div id="seriesQuestions" class="content-container">
-      <h3>What kind of series are you looking for?</h3>
-      <button onclick="handleDurationSelection('series', 'short')">Short</button>
-      <button onclick="handleDurationSelection('series', 'medium')">Medium</button>
-      <button onclick="handleDurationSelection('series', 'long')">Long</button>
-    </div>
+  <div class="frame active">
+    <h1>🌊 Welcome to S.E.A. 🌊</h1>
+    <p>Streaming Electronic Assistant — Dive into your next movie adventure!</p>
+    <button class="start-button" onclick="showFrame(1)">Let's make a splash!</button>
+  </div>
 
-    <div id="movieGenre" class="content-container">
-      <h3>What genre are you feeling for a movie?</h3>
-      <button onclick="chooseGenre('movie', 'Drama')">Drama</button>
-      <button onclick="chooseGenre('movie', 'Comedy')">Comedy</button>
-      <button onclick="chooseGenre('movie', 'Action')">Action</button>
-      <button onclick="chooseGenre('movie', 'Horror')">Horror</button>
-    </div>
-
-    <div id="seriesGenre" class="content-container">
-      <h3>What genre are you feeling for a series?</h3>
-      <button onclick="chooseGenre('series', 'Drama')">Drama</button>
-      <button onclick="chooseGenre('series', 'Comedy')">Comedy</button>
-      <button onclick="chooseGenre('series', 'Action')">Action</button>
-      <button onclick="chooseGenre('series', 'Horror')">Horror</button>
-    </div>
-
-    <div id="streamingService" class="content-container">
-      <h3>Where would you like to watch?</h3>
-      <button onclick="chooseStreamingService('Netflix')">Netflix</button>
-      <button onclick="chooseStreamingService('Hulu')">Hulu</button>
-      <button onclick="chooseStreamingService('Disney+')">Disney+</button>
-    </div>
-
-    <div id="loading" class="content-container">
-      <h3>Generating your recommendation...</h3>
-    </div>
-
-    <div id="movieResult" class="content-container">
-      <h3>Your Movie Recommendation 🎬</h3>
-      <p id="movieResultText"></p>
-    </div>
-
-    <div id="seriesResult" class="content-container">
-      <h3>Your Series Recommendation 📺</h3>
-      <p id="seriesResultText"></p>
+  <div class="frame">
+    <h2>Choose your wave length 🐚</h2>
+    <div class="options">
+      <button onclick="selectLength('Short')">Short</button>
+      <button onclick="selectLength('Medium')">Medium</button>
+      <button onclick="selectLength('Long')">Long</button>
     </div>
   </div>
 
-  <script src="popup.js"></script>
+  <div class="frame">
+    <h2>Pick your current tide 🎭</h2>
+    <div class="options">
+      <button onclick="selectCategory('Drama')">Drama</button>
+      <button onclick="selectCategory('Action')">Action</button>
+      <button onclick="selectCategory('Comedy')">Comedy</button>
+      <button onclick="selectCategory('Romance')">Romance</button>
+      <button onclick="selectCategory('Horror')">Horror</button>
+      <button onclick="selectCategory('Education')">Education</button>
+    </div>
+  </div>
+
+  <div class="frame">
+    <h2>Pick your streaming vessel ⛵</h2>
+    <div class="options">
+      <button onclick="selectService('Netflix')">Netflix</button>
+      <button onclick="selectService('Hulu')">Hulu</button>
+      <button onclick="selectService('Max')">Max</button>
+      <button onclick="selectService('Disney+')">Disney+</button>
+      <button onclick="selectService('Prime')">Prime</button>
+      <button onclick="selectService('Peacock')">Peacock</button>
+    </div>
+  </div>
+
+  <div class="frame">
+    <h2>🏖️ Your tide-ly picked flick is:</h2>
+    <div class="result" id="result">Your movie will wash ashore soon...</div>
+    <div class="button-group">
+      <button class="restart-button" onclick="restart()">Start Over</button>
+      <button class="details-button" onclick="showDetails()">View Details</button>
+    </div>
+  </div>
+
+  <div class="frame">
+    <h2 id="details-title">Details about: <span id="details-movie-title">Movie Title</span></h2>
+    <p id="details-review">This is where more information about the movie could appear later.</p>
+    <div class="button-group">
+      <button class="restart-button" onclick="restart()">Start Over</button>
+      <button class="details-button" id="take-me-there-button" onclick="takeMeThere()">Take Me There!</button>
+    </div>
+  </div>
+
+  <script>
+    const movies = {
+      "Short|Drama|Netflix": "If Anything Happens I Love You",
+      "Short|Action|Netflix": "Bad Boys: Ride or Die",
+      "Short|Comedy|Netflix": "The Miracle Club",
+      "Short|Romance|Netflix": "To All the Boys I've Loved Before",
+      "Short|Horror|Netflix": "Talk to Me",
+      "Short|Education|Netflix": "The Magic School Bus Rides Again",
+
+      "Short|Drama|Hulu": "A Real Pain",
+      "Short|Action|Hulu": "Bad Boys: The Mill",
+      "Short|Comedy|Hulu": "The Cat in the Hat",
+      "Short|Romance|Hulu": "Palm Springs",
+      "Short|Horror|Hulu": "The Hug",
+      "Short|Education|Hulu": "Apollo: Back to the Moon",
+
+      "Short|Drama|Max": "Shotgun Wedding with My Boss",
+      "Short|Action|Max": "Bad Boys: Robocop",
+      "Short|Comedy|Max": "Sixteen Candles",
+      "Short|Romance|Max": "Am I OK?",
+      "Short|Horror|Max": "The Brood",
+      "Short|Education|Max": "Say Her Name: The Life and Death of Sandra Bland",
+
+      "Short|Drama|Disney+": "Dumbo",
+      "Short|Action|Disney+": "The Lion King",
+      "Short|Comedy|Disney+": "The Emperor’s New Groove",
+      "Short|Romance|Disney+": "Lady and the Tramp",
+      "Short|Horror|Disney+": "Frankenweenie",
+      "Short|Education|Disney+": "For the Birds",
+
+      "Short|Drama|Prime": "A Day Late and A Dollar Short",
+      "Short|Action|Prime": "D.E.B.S",
+      "Short|Comedy|Prime": "Obvious Child",
+      "Short|Romance|Prime": "Meet Cute",
+      "Short|Horror|Prime": "MadS",
+      "Short|Education|Prime": "Out of Print",
+
+      "Short|Drama|Peacock": "The Great & The Small",
+      "Short|Action|Peacock": "Wheelman",
+      "Short|Comedy|Peacock": "Hashtag Luv Swag",
+      "Short|Romance|Peacock": "Running On Empty",
+      "Short|Horror|Peacock": "The Texas Chainsaw Massacre",
+      "Short|Education|Peacock": "Forget Me Not: Inclusion in the Classroom",
+
+      "Medium|Drama|Netflix": "Whiplash",
+      "Medium|Action|Netflix": "Carry-On",
+      "Medium|Comedy|Netflix": "It’s What’s Inside",
+      "Medium|Romance|Netflix": "Anyone But You",
+      "Medium|Horror|Netflix": "Ma",
+      "Medium|Education|Netflix": "Crip Camp",
+
+      "Medium|Drama|Hulu": "Deep Water",
+      "Medium|Action|Hulu": "The Convert",
+      "Medium|Comedy|Hulu": "Nightbitch",
+      "Medium|Romance|Hulu": "The Hating Game",
+      "Medium|Horror|Hulu": "Things Will be Different",
+      "Medium|Education|Hulu": "Apollo: Leave No Trace",
+
+      "Medium|Drama|Max": "Dream Scenario",
+      "Medium|Action|Max": "Love Lies Bleeding",
+      "Medium|Comedy|Max": "Goodrich",
+      "Medium|Romance|Max": "Forgetting Sarah Marshall",
+      "Medium|Horror|Max": "Caddo Lake",
+      "Medium|Education|Max": "Capturing the Friedmans",
+
+      "Medium|Drama|Disney+": "Out of my Mind",
+      "Medium|Action|Disney+": "Mulan",
+      "Medium|Comedy|Disney+": "Free Guy",
+      "Medium|Romance|Disney+": "Enchanted",
+      "Medium|Horror|Disney+": "The Night House",
+      "Medium|Education|Disney+": "Before the Flood",
+
+      "Medium|Drama|Prime": "My Fault",
+      "Medium|Action|Prime": "John Wick",
+      "Medium|Comedy|Prime": "Picture This",
+      "Medium|Romance|Prime": "The Idea of You",
+      "Medium|Horror|Prime": "Men",
+      "Medium|Education|Prime": "Stories We Tell",
+
+      "Medium|Drama|Peacock": "Mr Monk’s Last Case",
+      "Medium|Action|Peacock": "The Dirty South",
+      "Medium|Comedy|Peacock": "Just Go With It",
+      "Medium|Romance|Peacock": "The Game of Love",
+      "Medium|Horror|Peacock": "Five Nights at Freddy’s",
+      "Medium|Education|Peacock": "Black Boys",
+
+      "Long|Drama|Netflix": "Pride and Prejudice",
+      "Long|Action|Netflix": "The Electric State",
+      "Long|Comedy|Netflix": "A Simple Favor",
+      "Long|Romance|Netflix": "Purple Hearts",
+      "Long|Horror|Netflix": "Hereditary",
+      "Long|Education|Netflix": "Rolling Thunder Revue: A Bob Dylan Story by Martin Scorsese",
+
+      "Long|Drama|Hulu": "Origin",
+      "Long|Action|Hulu": "XXX",
+      "Long|Comedy|Hulu": "Superbad",
+      "Long|Romance|Hulu": "Where the Crawdads Sing",
+      "Long|Horror|Hulu": "The Cursed",
+      "Long|Education|Hulu": "Lakota Nation VS The United States",
+
+      "Long|Drama|Max": "Crazy Rich Asians",
+      "Long|Action|Max": "Inception",
+      "Long|Comedy|Max": "Everything Everywhere All at Once",
+      "Long|Romance|Max": "Call Me by Your Name",
+      "Long|Horror|Max": "It",
+      "Long|Education|Max": "The Cheshire Murders",
+
+      "Long|Drama|Disney+": "The Fault in Our Stars",
+      "Long|Action|Disney+": "The Incredibles",
+      "Long|Comedy|Disney+": "Deadpool & Wolverine",
+      "Long|Romance|Disney+": "The Little Mermaid (Live Action)",
+      "Long|Horror|Disney+": "Alien",
+      "Long|Education|Disney+": "Fly",
+
+      "Long|Drama|Prime": "Challengers",
+      "Long|Action|Prime": "Monkey Man",
+      "Long|Comedy|Prime": "Red Rocket",
+      "Long|Romance|Prime": "About Time",
+      "Long|Horror|Prime": "Smile 2",
+      "Long|Education|Prime": "The Report",
+
+      "Long|Drama|Peacock": "Den of Thieves",
+      "Long|Action|Peacock": "Attraction",
+      "Long|Comedy|Peacock": "Shrek",
+      "Long|Romance|Peacock": "The Longest Ride",
+      "Long|Horror|Peacock": "The Witch - Part 1: The Supervision",
+      "Long|Education|Peacock": "Toni Morrison: The Pieces I Am"
+    };
+
+    let selectedLength = '';
+    let selectedCategory = '';
+    let selectedMovie = '';
+    let selectedService = ''; // New variable to store the selected streaming service
+
+    function selectLength(length) {
+      selectedLength = length;
+      showFrame(2);
+    }
+
+    function selectCategory(category) {
+      selectedCategory = category;
+      showFrame(3);
+    }
+
+    function selectService(service) {
+      selectedService = service; // Store the selected service
+      showLoading();
+      setTimeout(() => {
+        const key = `${selectedLength}|${selectedCategory}|${service}`;
+        selectedMovie = movies[key] || 'No match found. Try a different combo!';
+        document.getElementById('result').innerText = selectedMovie;
+        hideLoading();
+        showFrame(4);
+      }, 3000);
+    }
+
+    function restart() {
+      selectedLength = '';
+      selectedCategory = '';
+      selectedMovie = '';
+      showFrame(0);
+    }
+
+    function showDetails() {
+      const detailsTitleElement = document.getElementById('details-movie-title');
+      const detailsReviewElement = document.getElementById('details-review');
+
+      // Reviews for specific movies
+      const reviews = {
+        "A Simple Favor": "Anonymous Review: One of those movies where so much happens but you never lose thread of what’s happening and it keeps getting better and more shocking. So amazing 10/10 shocking experience, very unpredictable.",
+        "Call me by your Name": "Anonymous Review: It’s a coming-of-age book turned into film by the amazing Luca Guadagnino, set in Southern Italy during the summer of 1983. The story follows Elio, a charismatic 17-year-old boy, as he navigates his growing attraction to Oliver, a confident American scholar staying with his family. The film moves through their relationship as they form a deep and emotional connection, gaining valuable lessons about desire, vulnerability, and self-discovery along the way.",
+        "Dumbo": "Anonymous Review: Cute kids movie of a big-eared elephant in a circus. Beautiful animation that truly depicts a Disney Classic. Will probably make you laugh, cry, and experience a roller coaster of emotions.",
+        "If Anything Happens I Love You": "Anonymous Review: It’s a deeply emotional animated short film that shows how two parents cope with the loss of their daughter in a school shooting. It’s told without dialogue and it goes back and forth through the events that involve the incident.",
+        "Inception": "Anonymous Review: Inception is yet again another Christopher Nolan masterpiece. After watching the whole Dark Knight trilogy, I was hooked onto Christopher Nolan movies. He messes with your mind so much in the first watch of Inception, because you are so hooked on the main story you miss all the side details. The second watch of this movie was one of the best second watches I have had watching a film. The realization of how all the answers to the movie are right there messes even more with your mind, which goes to show how much of a mastermind Nolan is.",
+        "It": "Anonymous Review: Gruesome movie about a killer clown with more lore and background story than you would expect, and the story behind the children who wish to stop him. A classic horror movie by Stephen King.",
+        "Mulan": "Anonymous Review: Disney movie with surprisingly profound themes of feminism, culture, and duty and live-action adventure scenes. Would recommend, especially for its music.",
+        "My Fault": "Anonymous Review: It is no wonder why this Spanish movie has turned into such a great success. It follows the story of Noah and Nick, two step siblings who find an unexpected path to their hearts and yearn to protect each other. This drama-romance also features action and a deeper story than what we first encounter. It is such a complete movie that features charismatic characters and fun dialogue, but also manages to touch serious topics that make us empathize with our cast.",
+        "Pride and Prejudice": "Anonymous Review: Must watch romance movie set in the 1800’s with iconic pop culture scenes and an original enemies-to-lovers arc. Love this one and its book by Jane Austen. Amazing quotes!",
+        "Shrek": "Anonymous Review: Shrek is that one movie that I can watch no matter how I feel. If I'm sad, angry, happy, however it is I'm feeling, I can watch and it will put me in a good mood. It has so many small lessons like most animation movies do that actually impact me in real life scenarios. It also mixes the serious tones with a lot of laughter, which is the part I enjoy the most. All in all, it makes me feel like I am a kid again.",
+        "The Lion King": "Anonymous Review: It’s an animated classic film from Disney that follows the journey of Simba, a young lion prince destined to become king. After he suffers a tragical loss he is forced to reminisce on his past and to embrace his future as king, following the circle of life and his hakuna matata mentality imposed by friends that he makes along the way. The movie has an amazing soundtrack by the one and only Elton John and it’s a must-watch for all ages.",
+        "The Little Mermaid (Live Action)": "Anonymous Review: Contrary to popular belief, this movie is a great adaptation and expansion of the original animated movie! If Halle Bailey’s sweet voice doesn’t move you to tears, her dynamic with Jonah Hauer-King in a passionate romance certainly will. The movie follows the classic story of a mermaid turned human, and has a star-packed cast that gives the adaptation its own charm.",
+        "Whiplash": "Anonymous Review: Whiplash is one of the most legendary movies I have watched in my life. The duo of Miles Teller and JK Simmons is I think the best duo ever put out on television. They bounce off each other so perfectly that you can see how their characters intertwine from being so separate at the beginning of the movie into being identical at the ending. The message the movie portrays is also great, since Miles' character achieves his dreams after all the hardship he goes through."
+      };
+
+      // Set the movie title
+      if (detailsTitleElement) {
+        detailsTitleElement.innerText = selectedMovie;
+      }
+
+      // Set the review if it exists, otherwise show default text
+      if (detailsReviewElement) {
+        detailsReviewElement.innerText = reviews[selectedMovie] || "This is where more information about the movie could appear later.";
+      }
+
+      showFrame(5); // Show the "View Details" frame
+    }
+
+    function showFrame(num) {
+      document.querySelectorAll('.frame').forEach((frame, idx) => {
+        frame.classList.remove('active');
+        if (idx === num) frame.classList.add('active');
+      });
+    }
+
+    function showLoading() {
+      document.getElementById('loading').classList.add('show');
+    }
+
+    function hideLoading() {
+      document.getElementById('loading').classList.remove('show');
+    }
+
+    function takeMeThere() {
+      const streamingLinks = {
+        Netflix: "https://www.netflix.com/search?q=",
+        Hulu: "https://www.hulu.com/search?q=",
+        "Disney+": "https://www.disneyplus.com/search?q=",
+        Prime: "https://www.amazon.com/s?k=",
+        Peacock: "https://www.peacocktv.com/search/results?q=",
+        Max: "https://www.max.com/search?q="
+      };
+
+      if (selectedService && streamingLinks[selectedService]) {
+        const baseUrl = streamingLinks[selectedService];
+        const movieQuery = encodeURIComponent(selectedMovie);
+        const fullUrl = `${baseUrl}${movieQuery}`;
+        window.open(fullUrl, "_blank"); // Open the link in a new tab
+      } else {
+        alert("Sorry, we couldn't find a link for this movie on the selected service.");
+      }
+    }
+  </script>
 </body>
 </html>

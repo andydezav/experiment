@@ -102,6 +102,23 @@
       line-height: 1.5;
       color: #333;
     }
+
+    #progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: #e0e0e0;
+      z-index: 1000;
+    }
+
+    #progress-bar {
+      width: 0%;
+      height: 100%;
+      background: #0288d1;
+      transition: width 0.3s ease;
+    }
   </style>
 </head>
 <body>
@@ -112,6 +129,10 @@
   </audio>
 
   <div id="loading">🌊 Riding the waves...</div>
+
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
 
   <div class="frame active">
     <h1>🌊 Welcome to S.E.A. 🌊</h1>
@@ -368,10 +389,17 @@
     }
 
     function showFrame(num) {
-      document.querySelectorAll('.frame').forEach((frame, idx) => {
+      const frames = document.querySelectorAll('.frame');
+      const progressBar = document.getElementById('progress-bar');
+
+      frames.forEach((frame, idx) => {
         frame.classList.remove('active');
         if (idx === num) frame.classList.add('active');
       });
+
+      // Update progress bar width based on the frame number
+      const progressPercentage = ((num + 1) / frames.length) * 100;
+      progressBar.style.width = `${progressPercentage}%`;
     }
 
     function showLoading() {
